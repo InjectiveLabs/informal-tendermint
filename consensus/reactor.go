@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/gogo/protobuf/proto"
+
 	cstypes "github.com/tendermint/tendermint/consensus/types"
 	"github.com/tendermint/tendermint/libs/bits"
 	tmevents "github.com/tendermint/tendermint/libs/events"
@@ -693,6 +694,7 @@ func (conR *Reactor) gossipDataForCatchup(logger log.Logger, rs *cstypes.RoundSt
 		pp, err := part.ToProto()
 		if err != nil {
 			logger.Error("Could not convert part to proto", "index", index, "error", err)
+			time.Sleep(conR.conS.config.PeerGossipSleepDuration)
 			return
 		}
 		if p2p.SendEnvelopeShim(peer, p2p.Envelope{ //nolint: staticcheck
